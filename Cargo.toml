@@ -2,5 +2,21 @@
 name = "proxima"
 version = "0.1.0"
 edition = "2024"
+authors = ["espenblyn"]
+description = "Generic distance and similarity metrics for machine learning"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/espenblyn/proxima"
+keywords = ["machine-learning", "distance", "similarity", "cosine", "euclidean"]
+categories = ["science", "mathematics"]
+readme = "README.md"
 
 [dependencies]
+num-traits = "0.2"
+
+[dev-dependencies]
+criterion = { version = "0.8", features = ["html_reports"] }
+approx = "0.5"
+
+[[bench]]
+name = "benchmarks"
+harness = false
