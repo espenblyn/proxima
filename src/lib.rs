@@ -7,6 +7,10 @@ mod manhattan;
 pub use manhattan::Manhattan;
 mod cosine;
 pub use cosine::Cosine;
+mod dot;
+pub use dot::Dot;
+mod hamming;
+pub use hamming::Hamming;
 
 // Validation
 
