@@ -3,6 +3,8 @@ use std::iter::Sum;
 
 mod euclidean;
 pub use euclidean::{Euclidean, SqEuclidean};
+mod manhattan;
+pub use manhattan::Manhattan;
 
 // Validation
 
