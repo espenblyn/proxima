@@ -24,6 +24,7 @@ impl<F: Float + Sum> Similarity<F> for Cosine {
 
 impl<F: Float + Sum> Distance<F> for Cosine {
     fn distance(a: &[F], b: &[F]) -> F {
+        validate_lengths(a, b);
         F::one() - Self::similarity(a, b)
     }
 }
