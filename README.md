@@ -1,4 +1,4 @@
-# proxima
+# proxima-ml
 
 Distance and similarity metrics for Rust.
 
