@@ -1,5 +1,5 @@
 [package]
-name = "proxima"
+name = "proxima-ml"
 version = "0.1.0"
 edition = "2024"
 authors = ["espenblyn"]
