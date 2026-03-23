@@ -5,6 +5,8 @@ mod euclidean;
 pub use euclidean::{Euclidean, SqEuclidean};
 mod manhattan;
 pub use manhattan::Manhattan;
+mod cosine;
+pub use cosine::Cosine;
 
 // Validation
 
