@@ -6,7 +6,7 @@ use std::iter::Sum;
 pub struct Manhattan;
 
 impl<F: Float + Sum> Distance<F> for Manhattan {
-    fn distance(a: &[F], b: &[F]) -> F {
+    fn compute(a: &[F], b: &[F]) -> F {
         validate_lengths(a, b);
         a.iter()
             .zip(b.iter())
@@ -18,6 +18,7 @@ impl<F: Float + Sum> Distance<F> for Manhattan {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::DistanceExt;
     use approx::assert_abs_diff_eq;
 
     #[test]

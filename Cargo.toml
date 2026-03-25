@@ -10,8 +10,12 @@ keywords = ["machine-learning", "distance", "similarity", "cosine", "euclidean"]
 categories = ["science", "mathematics"]
 readme = "README.md"
 
+[features]
+ndarray = ["dep:ndarray"]
+
 [dependencies]
 num-traits = "0.2"
+ndarray = { version = "0.17.2", optional = true }
 
 [dev-dependencies]
 criterion = { version = "0.8", features = ["html_reports"] }
