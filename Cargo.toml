@@ -1,6 +1,6 @@
 [package]
 name = "proxima-ml"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2024"
 authors = ["espenblyn"]
 description = "Generic distance and similarity metrics for machine learning"
