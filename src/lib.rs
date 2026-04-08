@@ -1,3 +1,4 @@
+mod canberra;
 mod chebyshev;
 mod cosine;
 mod dot;
@@ -9,6 +10,7 @@ mod traits;
 mod utils;
 mod validation;
 
+pub use canberra::Canberra;
 pub use chebyshev::Chebyshev;
 pub use cosine::Cosine;
 pub use dot::Dot;
