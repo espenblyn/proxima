@@ -7,7 +7,7 @@ Generic over `f32` and `f64`, with batch operations out of the box.
 ## Quick start
 ```toml
 [dependencies]
-proxima-ml = "0.3"
+proxima-ml = "0.4"
 ```
 ```rust
 use proxima_ml::{Distance, Similarity, Euclidean, Cosine};
@@ -43,6 +43,22 @@ These work on categorical or discrete data. Any type that supports equality comp
 |--------|------|-------------|
 | `Hamming` | Distance | Counts positions where two sequences differ |
 | `Jaccard` | Both | Measures overlap between two sets |
+
+## Benchmarks
+
+Measured on Apple M-series, single-threaded, `f64` vectors. Run `cargo bench` to reproduce on your hardware.
+
+| Metric | 128d | 768d | 1536d |
+|--------|------|------|-------|
+| Chebyshev | 22 ns | 126 ns | 259 ns |
+| Dot | 27 ns | 308 ns | 717 ns |
+| Manhattan | 28 ns | 305 ns | 692 ns |
+| Euclidean | 30 ns | 319 ns | 731 ns |
+| SqEuclidean | 30 ns | 326 ns | 735 ns |
+| Canberra | 48 ns | 379 ns | 786 ns |
+| Cosine | 84 ns | 882 ns | 2063 ns |
+
+Sorted by 768d performance. All metrics scale linearly with dimension.
 
 ## ndarray support
 
