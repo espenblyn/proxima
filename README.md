@@ -88,7 +88,7 @@ let condensed = Euclidean::par_pdist(&points);
 | batch_distance (10k × 768d) | 3.2 ms | 449 µs | 7.2x |
 | pdist (1k × 128d) | 15.6 ms | 2.6 ms | 6.0x |
 
-Measured on Apple M-series, 8 cores.
+Measured on Apple M-series, 15 cores.
 
 ## Benchmarks
 
