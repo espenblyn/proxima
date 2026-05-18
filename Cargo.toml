@@ -1,6 +1,6 @@
 [package]
 name = "proxima-ml"
-version = "0.4.1"
+version = "0.5"
 edition = "2024"
 authors = ["espenblyn"]
 description = "Generic distance and similarity metrics for machine learning"
@@ -12,10 +12,12 @@ readme = "README.md"
 
 [features]
 ndarray = ["dep:ndarray"]
+parallel = ["rayon"]
 
 [dependencies]
 num-traits = "0.2"
 ndarray = { version = "0.17.2", optional = true }
+rayon = { version = "1.10", optional = true }
 
 [dev-dependencies]
 criterion = { version = "0.8", features = ["html_reports"] }

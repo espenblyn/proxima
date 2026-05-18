@@ -77,5 +77,51 @@ fn bench_distances_f32(c: &mut Criterion) {
     }
 }
 
-criterion_group!(benches, bench_distances_f64, bench_distances_f32);
+fn generate_points_f64(n: usize, dim: usize) -> Vec<Vec<f64>> {
+    (0..n)
+        .map(|i| (0..dim).map(|j| (i * dim + j) as f64 * 0.001).collect())
+        .collect()
+}
+
+fn bench_batch_distance(c: &mut Criterion) {
+    let dim = 768;
+    let n = 10_000;
+    let points = generate_points_f64(n, dim);
+    let query: Vec<f64> = (0..dim).map(|i| i as f64 * 0.003).collect();
+    let targets: Vec<&[f64]> = points.iter().map(|p| p.as_slice()).collect();
+
+    let mut group = c.benchmark_group("batch_distance_10k_768d");
+    group.bench_function("sequential", |b| {
+        b.iter(|| Euclidean::batch_distance(query.as_slice(), targets.clone()))
+    });
+    #[cfg(feature = "parallel")]
+    group.bench_function("parallel", |b| {
+        b.iter(|| Euclidean::par_batch_distance(query.as_slice(), targets.clone()))
+    });
+    group.finish();
+}
+
+fn bench_pdist(c: &mut Criterion) {
+    let dim = 128;
+    let n = 1_000;
+    let points = generate_points_f64(n, dim);
+
+    let mut group = c.benchmark_group("pdist_1k_128d");
+    group.bench_function("sequential", |b| {
+        b.iter(|| Euclidean::pdist(&points))
+    });
+    #[cfg(feature = "parallel")]
+    group.bench_function("parallel", |b| {
+        b.iter(|| Euclidean::par_pdist(&points))
+    });
+    group.finish();
+}
+
+criterion_group!(
+    benches,
+    bench_distances_f64,
+    bench_distances_f32,
+    bench_batch_distance,
+    bench_pdist
+);
 criterion_main!(benches);
