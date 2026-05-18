@@ -107,13 +107,9 @@ fn bench_pdist(c: &mut Criterion) {
     let points = generate_points_f64(n, dim);
 
     let mut group = c.benchmark_group("pdist_1k_128d");
-    group.bench_function("sequential", |b| {
-        b.iter(|| Euclidean::pdist(&points))
-    });
+    group.bench_function("sequential", |b| b.iter(|| Euclidean::pdist(&points)));
     #[cfg(feature = "parallel")]
-    group.bench_function("parallel", |b| {
-        b.iter(|| Euclidean::par_pdist(&points))
-    });
+    group.bench_function("parallel", |b| b.iter(|| Euclidean::par_pdist(&points)));
     group.finish();
 }
 
