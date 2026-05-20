@@ -61,6 +61,68 @@ pub trait DistanceExt<F: Float + Sum>: Distance<F> {
             .collect()
     }
 
+    fn pdist<'a, T>(points: &'a [T]) -> Vec<F>
+    where
+        T: AsRef<[F]>,
+        F: 'a,
+    {
+        let n = points.len();
+        let mut result = Vec::with_capacity(n * (n - 1) / 2);
+
+        for i in 0..n {
+            for j in (i + 1)..n {
+                result.push(Self::compute(points[i].as_ref(), points[j].as_ref()));
+            }
+        }
+
+        result
+    }
+
+    #[cfg(feature = "ndarray")]
+    fn pdist_2d(points: &ndarray::Array2<F>) -> Vec<F>
+    where
+        F: ndarray::NdFloat,
+    {
+        let n = points.nrows();
+        let mut result = Vec::with_capacity(n * (n - 1) / 2);
+
+        for i in 0..n {
+            let row_i = points.row(i);
+            let slice_i = row_i
+                .as_slice()
+                .expect("proxima: Array2 must be row-major (C order)");
+            for j in (i + 1)..n {
+                let row_j = points.row(j);
+                let slice_j = row_j
+                    .as_slice()
+                    .expect("proxima: Array2 must be row-major (C order)");
+                result.push(Self::compute(slice_i, slice_j));
+            }
+        }
+
+        result
+    }
+
+    #[cfg(feature = "ndarray")]
+    fn batch_distance_2d(query: &ndarray::Array1<F>, targets: &ndarray::Array2<F>) -> Vec<F>
+    where
+        F: ndarray::NdFloat,
+    {
+        let query_slice = query
+            .as_slice()
+            .expect("proxima: Array1 must be contiguous");
+
+        (0..targets.nrows())
+            .map(|i| {
+                let row = targets.row(i);
+                let slice = row
+                    .as_slice()
+                    .expect("proxima: Array2 must be row-major (C order)");
+                Self::compute(query_slice, slice)
+            })
+            .collect()
+    }
+
     #[cfg(feature = "parallel")]
     fn par_batch_distance<'q, 't, T>(
         query: impl IntoSlice<'q, F>,
@@ -100,21 +162,52 @@ pub trait DistanceExt<F: Float + Sum>: Distance<F> {
             .collect()
     }
 
-    fn pdist<'a, T>(points: &'a [T]) -> Vec<F>
+    #[cfg(all(feature = "ndarray", feature = "parallel"))]
+    fn par_pdist_2d(points: &ndarray::Array2<F>) -> Vec<F>
     where
-        T: AsRef<[F]>,
-        F: 'a,
+        F: ndarray::NdFloat + Send + Sync,
     {
-        let n = points.len();
-        let mut result = Vec::with_capacity(n * (n - 1) / 2);
+        let n = points.nrows();
 
-        for i in 0..n {
-            for j in (i + 1)..n {
-                result.push(Self::compute(points[i].as_ref(), points[j].as_ref()));
-            }
-        }
+        (0..n)
+            .into_par_iter()
+            .flat_map(|i| {
+                let row_i = points.row(i);
+                let slice_i = row_i
+                    .as_slice()
+                    .expect("proxima: Array2 must be row-major (C order)");
+                ((i + 1)..n)
+                    .map(|j| {
+                        let row_j = points.row(j);
+                        let slice_j = row_j
+                            .as_slice()
+                            .expect("proxima: Array2 must be row-major (C order)");
+                        Self::compute(slice_i, slice_j)
+                    })
+                    .collect::<Vec<_>>()
+            })
+            .collect()
+    }
 
-        result
+    #[cfg(all(feature = "ndarray", feature = "parallel"))]
+    fn par_batch_distance_2d(query: &ndarray::Array1<F>, targets: &ndarray::Array2<F>) -> Vec<F>
+    where
+        F: ndarray::NdFloat + Send + Sync,
+    {
+        let query_slice = query
+            .as_slice()
+            .expect("proxima: Array1 must be contiguous");
+
+        (0..targets.nrows())
+            .into_par_iter()
+            .map(|i| {
+                let row = targets.row(i);
+                let slice = row
+                    .as_slice()
+                    .expect("proxima: Array2 must be row-major (C order)");
+                Self::compute(query_slice, slice)
+            })
+            .collect()
     }
 }
 
