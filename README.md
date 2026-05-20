@@ -124,7 +124,7 @@ Cosine similarity uses a fused single-pass algorithm that computes the dot produ
 
 ## ndarray support
 
-Enable the `ndarray` feature to pass `Array1` and `ArrayView1` directly to any vector metric:
+Enable the `ndarray` feature to pass `Array1`, `ArrayView1`, and `Array2` directly to any vector metric:
 
 ```toml
 [dependencies]
@@ -132,13 +132,23 @@ proxima-ml = { version = "0.6", features = ["ndarray"] }
 ```
 
 ```rust
-use ndarray::Array1;
-use proxima_ml::{Distance, Euclidean};
+use ndarray::{Array1, Array2};
+use proxima_ml::{Distance, DistanceExt, Euclidean};
 
+// Single pair with Array1
 let a = Array1::from_vec(vec![1.0, 2.0, 3.0]);
 let b = Array1::from_vec(vec![4.0, 5.0, 6.0]);
-
 let dist = Euclidean::distance(&a, &b);
+
+// Batch and pairwise with Array2 (each row is a vector)
+let embeddings = Array2::from_shape_vec((3, 3), vec![
+    1.0, 2.0, 3.0,
+    4.0, 5.0, 6.0,
+    7.0, 8.0, 9.0,
+]).unwrap();
+
+let condensed = Euclidean::pdist_2d(&embeddings);
+let distances = Euclidean::batch_distance_2d(&a, &embeddings);
 ```
 
 ## License
