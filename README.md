@@ -8,7 +8,7 @@ Generic over `f32` and `f64`. Built for ML workloads: batch operations, pairwise
 
 ```toml
 [dependencies]
-proxima-ml = "0.5"
+proxima-ml = "0.6"
 ```
 
 ```rust
@@ -72,7 +72,7 @@ Enable the `parallel` feature for multi-threaded batch operations powered by [Ra
 
 ```toml
 [dependencies]
-proxima-ml = { version = "0.5", features = ["parallel"] }
+proxima-ml = { version = "0.6", features = ["parallel"] }
 ```
 
 ```rust
@@ -128,7 +128,7 @@ Enable the `ndarray` feature to pass `Array1` and `ArrayView1` directly to any v
 
 ```toml
 [dependencies]
-proxima-ml = { version = "0.5", features = ["ndarray"] }
+proxima-ml = { version = "0.6", features = ["ndarray"] }
 ```
 
 ```rust
